@@ -1,6 +1,13 @@
 import pygame
 from sys import exit
 
+def resetGrid():
+    grid = []
+    for i in range(9):
+        grid.append("-")
+    return grid
+
+
 #Classes
 class greyblock:
     def __init__(self, x,y,color):
@@ -15,12 +22,11 @@ pygame.display.set_caption("TicTacToe")
 screen = pygame.display.set_mode((500,500))
 gameloop = True
 
-grid = []
-for i in range(9):
-    grid.append("-")
+grid = resetGrid()
 
 WHITE = (255,255,255)
 GREY = (80,80,80)
+BLACK = (0,0,0)
 
 turn = "X"
 
@@ -32,18 +38,29 @@ while gameloop:
         if event.type == pygame.QUIT:
             pygame.display.quit()
             pygame.quit()
-            exit() 
+            exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                grid = resetGrid()
+                turn = "X"
         if event.type == pygame.MOUSEBUTTONDOWN:
             for i in range(len(greyboxes)):
                 if greyboxes[i].collidepoint(pygame.mouse.get_pos()):
                     print(i)
                     if turn == "X":
-                        turn = "O"
-                        grid[i] = "X"
+                        if grid[i] == "-":
+                            grid[i] = "X"
+                            turn = "O"  
                     else:
-                        turn = "X"
-                        grid[i] = "O"
+                        if grid[i] == "-":
+                            grid[i] = "O"
+                            turn = "X"
     
+    screen.fill(BLACK)
+    turnFont = pygame.font.Font('freesansbold.ttf',60)
+    turnRect = turnFont.render("Turn: " + turn, True, WHITE)
+    screen.blit(turnRect, (10,10))
+
     
     #Grey squares
     #123
