@@ -15,15 +15,34 @@ pygame.display.set_caption("TicTacToe")
 screen = pygame.display.set_mode((500,500))
 gameloop = True
 
+grid = []
+for i in range(9):
+    grid.append("-")
+
 WHITE = (255,255,255)
 GREY = (80,80,80)
 
+turn = "X"
+
+greyboxes = [pygame.Rect(50,75,100,80),pygame.Rect(200,75,100,80),pygame.Rect(350,75,100,80),
+                 pygame.Rect(50,200,100,80),pygame.Rect(200,200,100,80),pygame.Rect(350,200,100,80),
+                 pygame.Rect(50,320,100,80),pygame.Rect(200,320,100,80),pygame.Rect(350,320,100,80)]
 while gameloop:
     for event in pygame.event.get(): 
         if event.type == pygame.QUIT:
             pygame.display.quit()
             pygame.quit()
             exit() 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for i in range(len(greyboxes)):
+                if greyboxes[i].collidepoint(pygame.mouse.get_pos()):
+                    print(i)
+                    if turn == "X":
+                        turn = "O"
+                        grid[i] = "X"
+                    else:
+                        turn = "X"
+                        grid[i] = "O"
     
     
     #Grey squares
@@ -31,16 +50,25 @@ while gameloop:
     #456
     #789
     
-    pygame.draw.rect(screen,GREY,pygame.Rect(50,75,100,80)) #1
-    pygame.draw.rect(screen,GREY,pygame.Rect(200,75,100,80)) #2
-    pygame.draw.rect(screen,GREY,pygame.Rect(350,75,100,80)) #3
-    pygame.draw.rect(screen,GREY,pygame.Rect(50,200,100,80)) #4
-    pygame.draw.rect(screen,GREY,pygame.Rect(200,200,100,80)) #5
-    pygame.draw.rect(screen,GREY,pygame.Rect(350,200,100,80)) #6
-    pygame.draw.rect(screen,GREY,pygame.Rect(50,320,100,80)) #7
-    pygame.draw.rect(screen,GREY,pygame.Rect(200,320,100,80)) #8
-    pygame.draw.rect(screen,GREY,pygame.Rect(350,320,100,80)) #9
+    pygame.draw.rect(screen,GREY,greyboxes[0]) #1
+    pygame.draw.rect(screen,GREY,greyboxes[1]) #2
+    pygame.draw.rect(screen,GREY,greyboxes[2]) #3
+    pygame.draw.rect(screen,GREY,greyboxes[3]) #4
+    pygame.draw.rect(screen,GREY,greyboxes[4]) #5
+    pygame.draw.rect(screen,GREY,greyboxes[5]) #6
+    pygame.draw.rect(screen,GREY,greyboxes[6]) #7
+    pygame.draw.rect(screen,GREY,greyboxes[7]) #8
+    pygame.draw.rect(screen,GREY,greyboxes[8]) #9
     
+    #Draw text for turns
+    for i in range(len(greyboxes)):
+        if grid[i] != "-":
+            
+            font = pygame.font.Font('freesansbold.ttf',60)
+            textrect = font.render(grid[i],True,WHITE)
+            # text = textrect.get_rect()
+            # pygame.draw.rect(screen,WHITE,font)
+            screen.blit(textrect, (greyboxes[i].x+30, greyboxes[i].y+15))
     #Lines for grid
     pygame.draw.line(screen, WHITE, (167,65), (167,400),4) #Left verticle
     pygame.draw.line(screen,WHITE, (333, 65), (333,400),4) #Right verticle
