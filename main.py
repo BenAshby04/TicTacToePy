@@ -7,6 +7,29 @@ def resetGrid():
         grid.append("-")
     return grid
 
+def checkWin(grid):
+    #012
+    #345
+    #678  
+    if grid[0] == grid[1] and grid[0] == grid[2] and grid[0] != "-":
+        return True
+    elif grid[3] == grid[4] and grid[3] == grid[5] and grid[3] != "-":
+        return True
+    elif grid[6] == grid[7] and grid[6] == grid[8] and grid[6] != "-":
+        return True
+    elif grid[0] == grid[3] and grid[0] == grid[6] and grid[0] != "-":
+        return True
+    elif grid[1] == grid[4] and grid[1] == grid[7] and grid[1] != "-":
+        return True
+    elif grid[2] == grid[5] and grid[2] == grid[8] and grid[2] != "-":
+        return True
+    elif grid[0] == grid[4] and grid[0] == grid[8] and grid[0] != "-":
+        return True
+    elif grid[2] == grid[4] and grid[2] == grid[6] and grid[2] != "-":
+        return True
+    else:
+        return False
+
 
 #Classes
 class greyblock:
@@ -27,7 +50,8 @@ grid = resetGrid()
 WHITE = (255,255,255)
 GREY = (80,80,80)
 BLACK = (0,0,0)
-
+GREEN = (80,200,120)
+win = False
 turn = "X"
 
 greyboxes = [pygame.Rect(50,75,100,80),pygame.Rect(200,75,100,80),pygame.Rect(350,75,100,80),
@@ -43,29 +67,40 @@ while gameloop:
             if event.key == pygame.K_r:
                 grid = resetGrid()
                 turn = "X"
+                win = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             for i in range(len(greyboxes)):
                 if greyboxes[i].collidepoint(pygame.mouse.get_pos()):
                     print(i)
+                    
                     if turn == "X":
                         if grid[i] == "-":
+                        
+                                
                             grid[i] = "X"
-                            turn = "O"  
+                            win = checkWin(grid)
+                            if win == False:
+                                turn = "O"  
                     else:
                         if grid[i] == "-":
+                        
                             grid[i] = "O"
-                            turn = "X"
+                            win = checkWin(grid)
+                            if win == False:
+                                turn = "X"
+                    
     
     screen.fill(BLACK)
     turnFont = pygame.font.Font('freesansbold.ttf',60)
     turnRect = turnFont.render("Turn: " + turn, True, WHITE)
     screen.blit(turnRect, (10,10))
-
+    
+    
     
     #Grey squares
-    #123
-    #456
-    #789
+    #012
+    #345
+    #678
     
     pygame.draw.rect(screen,GREY,greyboxes[0]) #1
     pygame.draw.rect(screen,GREY,greyboxes[1]) #2
@@ -91,6 +126,11 @@ while gameloop:
     pygame.draw.line(screen,WHITE, (333, 65), (333,400),4) #Right verticle
     pygame.draw.line(screen,WHITE,(40,180),(460,180),4) #Top Horizontal
     pygame.draw.line(screen,WHITE,(40,300), (460,300),4) #Bottom Horizontal
+    if win:
+        winFont = pygame.font.Font('freesansbold.ttf', 100)
+        winRect = winFont.render(turn +" Wins!", True, GREEN)
+        screen.blit(winRect,(100,220))
+
     pygame.display.flip()
     
     clock.tick(60)
