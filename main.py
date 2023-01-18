@@ -30,6 +30,11 @@ def checkWin(grid):
     else:
         return False
 
+def checkTie(grid):
+    for i in range(len(grid)):
+        if grid[i] == "-":
+            return False
+    return True
 
 #Classes
 class greyblock:
@@ -52,6 +57,7 @@ GREY = (80,80,80)
 BLACK = (0,0,0)
 GREEN = (80,200,120)
 win = False
+tie = False
 turn = "X"
 
 greyboxes = [pygame.Rect(50,75,100,80),pygame.Rect(200,75,100,80),pygame.Rect(350,75,100,80),
@@ -68,6 +74,7 @@ while gameloop:
                 grid = resetGrid()
                 turn = "X"
                 win = False
+                tie = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             for i in range(len(greyboxes)):
                 if greyboxes[i].collidepoint(pygame.mouse.get_pos()):
@@ -79,6 +86,7 @@ while gameloop:
                                 
                             grid[i] = "X"
                             win = checkWin(grid)
+                            tie = checkTie(grid)
                             if win == False:
                                 turn = "O"  
                     else:
@@ -126,9 +134,13 @@ while gameloop:
     pygame.draw.line(screen,WHITE, (333, 65), (333,400),4) #Right verticle
     pygame.draw.line(screen,WHITE,(40,180),(460,180),4) #Top Horizontal
     pygame.draw.line(screen,WHITE,(40,300), (460,300),4) #Bottom Horizontal
-    if win:
+    if win and tie==False:
         winFont = pygame.font.Font('freesansbold.ttf', 100)
         winRect = winFont.render(turn +" Wins!", True, GREEN)
+        screen.blit(winRect,(100,220))
+    if win == False and tie == True:
+        winFont = pygame.font.Font('freesansbold.ttf', 100)
+        winRect = winFont.render("Tie!", True, GREEN)
         screen.blit(winRect,(100,220))
 
     pygame.display.flip()
